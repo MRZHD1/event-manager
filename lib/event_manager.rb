@@ -51,7 +51,13 @@ contents = CSV.open(
 template_letter = File.read('form_letter.erb')
 erb_template = ERB.new template_letter
 
+time_frequency = Hash.new(0)
+
 contents.each do |row|
+  format_date = row[:regdate].split(" ")
+  time = Time.parse(format_date[1])
+  time_frequency[time.hour] += 1
+  
   id = row[0]
   name = row[:first_name]
   number = clean_phone(row[:homephone])
@@ -62,3 +68,6 @@ contents.each do |row|
 
   save_thank_you_letter(id,form_letter)
 end
+
+
+time_frequency # This is the peak hours for signups

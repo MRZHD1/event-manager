@@ -52,12 +52,17 @@ template_letter = File.read('form_letter.erb')
 erb_template = ERB.new template_letter
 
 time_frequency = Hash.new(0)
+weekday_frequency = Hash.new(0)
 
 contents.each do |row|
   format_date = row[:regdate].split(" ")
+
   time = Time.parse(format_date[1])
   time_frequency[time.hour] += 1
-  
+
+  date = Date.parse(format_date[0][-2..-1] + '/' + format_date[0][..-4])
+  weekday_frequency[date.wday] += 1
+
   id = row[0]
   name = row[:first_name]
   number = clean_phone(row[:homephone])
@@ -71,3 +76,4 @@ end
 
 
 time_frequency # This is the peak hours for signups
+weekday_frequency # This is the peak days of the week for signups
